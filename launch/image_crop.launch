@@ -1,0 +1,52 @@
+<launch>
+
+  <arg name="gui" default="true" />
+  <arg name="launch_manager" default="true" />
+
+  <arg name="MANAGER" default="sample_manager" />
+  <node name="$(arg MANAGER)"
+        pkg="nodelet" type="nodelet" args="manager"
+        if="$(arg launch_manager)"
+        output="screen" />
+
+  <arg name="INPUT_IMAGE" default="/k4a/rgb/image_rect_color" />
+
+  <node name="mask_image_generator"
+        pkg="jsk_perception" type="mask_image_generator">
+    <remap from="~input" to="$(arg INPUT_IMAGE)" />
+    <rosparam>
+      offset_x: 950
+      offset_y: 80
+      width: 730
+      height: 820
+    </rosparam>
+  </node>
+  <arg name="MASK_IMAGE" default="mask_image_generator/output" />
+
+  <node name="apply_mask_image"
+        pkg="nodelet" type="nodelet"
+        args="load jsk_perception/ApplyMaskImage $(arg MANAGER)"
+        respawn="true" >
+    <remap from="~input" to="$(arg INPUT_IMAGE)" />
+    <remap from="~input/mask" to="$(arg MASK_IMAGE)" />
+    <rosparam>
+      approximate_sync: true
+    </rosparam>
+  </node>
+
+  <group if="$(arg gui)">
+    <node name="image_view0"
+          pkg="image_view" type="image_view">
+      <remap from="image" to="$(arg INPUT_IMAGE)" />
+    </node>
+    <node name="image_view1"
+          pkg="image_view" type="image_view">
+      <remap from="image" to="$(arg MASK_IMAGE)" />
+    </node>
+    <node name="image_view2"
+          pkg="image_view" type="image_view">
+      <remap from="image" to="apply_mask_image/output" />
+    </node>
+  </group>
+
+</launch>
