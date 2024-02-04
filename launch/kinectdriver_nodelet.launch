@@ -152,7 +152,7 @@
     <!-- resize for point cloud -->
     <node name="resize_rgb"
           pkg="nodelet" type="nodelet"
-          args="load image_proc/resize $(arg manager)" >
+          args="standalone image_proc/resize" >
       <param name="scale_height" value="0.5" />
       <param name="scale_width" value="0.5" />
       <remap from="image" to="rgb/image_rect_color" />
@@ -165,7 +165,7 @@
     <!-- resize for point cloud -->
     <node name="resize_depth_to_rgb_half"
           pkg="nodelet" type="nodelet"
-          args="load image_proc/resize $(arg manager)" >
+          args="standalone image_proc/resize" >
       <param name="interpolation" value="0" />
       <param name="scale_height" value="0.5" />
       <param name="scale_width" value="0.5" />
@@ -179,7 +179,7 @@
     <!-- resize for point cloud -->
     <node name="resize_depth_half"
           pkg="nodelet" type="nodelet"
-          args="load image_proc/resize $(arg manager)" >
+          args="standalone image_proc/resize" >
       <param name="interpolation" value="0" />
       <param name="scale_height" value="0.5" />
       <param name="scale_width" value="0.5" />
